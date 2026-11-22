@@ -24,7 +24,7 @@ type AnyServerFn = (opts: { data: any }) => Promise<any>;
 
 /** Wraps a server function call: toasts, and refreshes all finance data on success. */
 export function useFinanceAction<F extends AnyServerFn>(fn: F, successMessage?: string) {
-  const call = useServerFn(fn);
+  const call = useServerFn(fn) as unknown as AnyServerFn;
   const qc = useQueryClient();
   return useMutation({
     mutationFn: (data: Parameters<F>[0]["data"]) => call({ data }),

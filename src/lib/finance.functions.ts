@@ -11,6 +11,7 @@ import {
   repeatTransactionSchema,
   settleBillSchema,
   studentPaymentSchema,
+  type DeletableTable,
   type EditableTable,
 } from "@/lib/finance/schemas";
 import { FINANCE_TABLES, type FinanceData } from "@/lib/finance/types";
@@ -102,13 +103,13 @@ export const createRepeatedTransactions = createServerFn({ method: "POST" })
         recurrence_group: group,
       };
     });
-    const { error } = await db.from("transactions").insert(rows);
+    const { error } = await db.from("transactions").insert(rows as never);
     if (error) friendlyError(error);
     return { count: rows.length };
   });
 
 const deleteInput = z.object({
-  table: z.enum(deletableTables),
+  table: z.enum(deletableTables as unknown as [DeletableTable, ...DeletableTable[]]),
   id: z.string().uuid(),
 });
 
@@ -126,7 +127,7 @@ export const deleteRecord = createServerFn({ method: "POST" })
         throw new Error("Remova pelo módulo de origem (pagamento de aluno ou dividendo).");
       }
     }
-    const { error } = await db.from(data.table).delete().eq("id", data.id);
+    const { error } = await db.from(data.table as "tasks").delete().eq("id", data.id);
     if (error) friendlyError(error);
     return { ok: true };
   });

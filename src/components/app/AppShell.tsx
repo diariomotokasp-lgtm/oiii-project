@@ -1,5 +1,5 @@
 import { Link, useRouterState } from "@tanstack/react-router";
-import { CalendarDays, Menu, Settings } from "lucide-react";
+import { CalendarDays, Menu } from "lucide-react";
 import { useState, type ReactNode } from "react";
 
 import { Button } from "@/components/ui/button";
@@ -11,7 +11,7 @@ import { NotificationsButton } from "@/components/app/Notifications";
 import { formatLongToday } from "@/lib/finance/dates";
 import { cn } from "@/lib/utils";
 
-function SidebarNav({ onNavigate }: { onNavigate?: () => void }) {
+function SidebarNav({ onNavigate }: { onNavigate?: (() => void) | undefined }) {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   return (
     <nav className="flex flex-col gap-0.5 px-3 pb-6">
@@ -45,7 +45,7 @@ function SidebarNav({ onNavigate }: { onNavigate?: () => void }) {
   );
 }
 
-function SidebarInner({ onNavigate }: { onNavigate?: () => void }) {
+function SidebarInner({ onNavigate }: { onNavigate?: (() => void) | undefined }) {
   return (
     <div className="flex h-full flex-col">
       <div className="px-5 pb-6 pt-6">
@@ -100,11 +100,6 @@ export function AppShell({ children }: { children: ReactNode }) {
             </div>
             <PeriodPicker />
             <NotificationsButton />
-            <Button variant="ghost" size="icon" asChild aria-label="Configurações">
-              <Link to="/configuracoes">
-                <Settings />
-              </Link>
-            </Button>
           </div>
         </header>
         <main className="mx-auto w-full max-w-[1400px] px-4 py-6 sm:px-6 lg:px-8 lg:py-8">{children}</main>
